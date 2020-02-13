@@ -6,19 +6,46 @@ function ask(questionText) {
     readlineInterface.question(questionText, resolve);
   });
 }
+/* ------------------------------^^Readline^^----------------------------------*/
 
-// remember the StateMachine lecture
-// https://bootcamp.burlingtoncodeacademy.com/lessons/cs/state-machines
-let states = {
-  'roomOne': { canChangeTo: [ 'roomTwo' ] },
-  'roomTwo': { canChangeTo: [ 'roomThree' ] },
-  'roomThree': { canChangeTo: [ 'roomOne' ] }
+let roomLookUp = {
+  'outside': outside,
+  'foyer': foyer,
+  'living room': livingRoom,
+  'kitchen': kitchen,
+  'hallway': hallway,
+  'mans room': mansRoom,
+  'girls room': girlsRooom,
+
+  'basement': basement,
+  'stairs up': stairsUp,
+  'stairs down': stairsDown
+}
+
+let itemLookUp = {
+  'newspaper': newspaper,
+  'key': key,
+  'doorknob': doorknob,
+  'garlic': garlic,
+  'wood steak': woodSteak,
+  'candy corn': candyCorn,
+  'roast': roast,
+  'snickers bar': snickersBar,
+  'tb cure': tbCure
+}
+
+
+let houseRooms = {
+  'foyer': { canChangeTo: [ 'living room', 'outside' ] },
+  'living room': { canChangeTo: [ 'foyer', 'kitchen', 'stairs up', 'stairs down' ] },
+  'kitchen': { canChangeTo: [ 'living room' ] },
+  'stairs up'
 };
 
 let currentState = "roomOne";
 
 function enterState(newState) {
-  let validTransitions = states[currentState].canChangeTo;
+  let validTransitions = houseRooms[currentState].canChangeTo;
   if (validTransitions.includes(newState)) {
     currentState = newState;
   } else {
@@ -49,3 +76,5 @@ async function start() {
   console.log("I'm sorry, I dont know how to " + answer);
   process.exit();
 }
+
+
