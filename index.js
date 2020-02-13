@@ -1,3 +1,6 @@
+
+/* --------------------------------Readline------------------------------------*/
+
 const readline = require('readline');
 const readlineInterface = readline.createInterface(process.stdin, process.stdout);
 
@@ -6,7 +9,8 @@ function ask(questionText) {
     readlineInterface.question(questionText, resolve);
   });
 }
-/* ------------------------------^^Readline^^----------------------------------*/
+
+/* ------------------------------Look up Tables----------------------------------*/
 
 let roomLookUp = {
   'outside': outside,
@@ -34,15 +38,21 @@ let itemLookUp = {
   'tb cure': tbCure
 }
 
+/*---------------------------------State Changes------------------------------------*/
 
 let houseRooms = {
   'foyer': { canChangeTo: [ 'living room', 'outside' ] },
   'living room': { canChangeTo: [ 'foyer', 'kitchen', 'stairs up', 'stairs down' ] },
-  'kitchen': { canChangeTo: [ 'living room' ] }
-  
+  'kitchen': { canChangeTo: [ 'living room' ] },
+  'hallway': { canChangeTo: [ 'mans room', 'girls room', 'stairs up' ]},
+  'mans room': { canChangeTo: [ 'hallway' ]},
+  'girls room': { canChangeTo: [ 'hallway' ]},
+  'stairs up': { canChangeTo: [ 'hallway', 'living room' ]},
+  'stairs down': { canChangeTo: [ 'living room', 'basement' ]},
+  'basement': { canChangeTo: [ 'stairs down' ]}
 };
 
-let currentState = "roomOne";
+let currentState = "foyer";
 
 function enterState(newState) {
   let validTransitions = houseRooms[currentState].canChangeTo;
@@ -52,6 +62,8 @@ function enterState(newState) {
     throw 'Invalid state transition attempted - from ' + currentState + ' to ' + newState;
   }
 }
+
+/*----------------------------------Story--------------------------------------------*/
 
 start();
 
