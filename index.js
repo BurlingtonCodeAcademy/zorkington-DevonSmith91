@@ -67,7 +67,7 @@ let houseRooms = {
   'hallway': { canChangeTo: [ 'mans room', 'girls room', 'living room' ]},
   'mans room': { canChangeTo: [ 'hallway' ]},
   'girls room': { canChangeTo: [ 'hallway' ]},
-  'basement': { canChangeTo: [ 'living room' ]}
+  'basement': { canChangeTo: [ 'living room']}
 };
 
 let currentState = "foyer";
