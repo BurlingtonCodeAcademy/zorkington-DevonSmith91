@@ -9,6 +9,27 @@ function ask(questionText) {
     readlineInterface.question(questionText, resolve);
   });
 }
+/*---------------------------------Rooms-----------------------------------------*/
+
+class Room{
+  constructor(name, desc, inv){ 
+      this.name = name
+      this.desc = desc
+      this.inv = inv
+      this.locked = false
+  }
+}
+
+const outside = new Room('You are now inside', [], true)
+const foyer = new Room('You are now inside', [], true)
+const livingRoom = new Room('You are now inside', [], true)
+const kitchen = new Room('You are now inside', [], true)
+const hallway = new Room('You are now inside', [], true)
+const mansRoom = new Room('You are now inside', [], true)
+const girlsRoom = new Room('You are now inside', [], true)
+const basement = new Room('You are now inside', [], true)
+
+
 
 /* ------------------------------Look up Tables----------------------------------*/
 
@@ -19,11 +40,10 @@ let roomLookUp = {
   'kitchen': kitchen,
   'hallway': hallway,
   'mans room': mansRoom,
-  'girls room': girlsRooom,
-
+  'girls room': girlsRoom,
   'basement': basement,
-  'stairs up': stairsUp,
-  'stairs down': stairsDown
+  // 'main stairs': mainStairs,
+  // 'basement stairs': basementStairs
 }
 
 let itemLookUp = {
@@ -42,14 +62,12 @@ let itemLookUp = {
 
 let houseRooms = {
   'foyer': { canChangeTo: [ 'living room', 'outside' ] },
-  'living room': { canChangeTo: [ 'foyer', 'kitchen', 'stairs up', 'stairs down' ] },
+  'living room': { canChangeTo: [ 'foyer', 'kitchen', 'hallway', 'basement' ] },
   'kitchen': { canChangeTo: [ 'living room' ] },
-  'hallway': { canChangeTo: [ 'mans room', 'girls room', 'stairs up' ]},
+  'hallway': { canChangeTo: [ 'mans room', 'girls room', 'living room' ]},
   'mans room': { canChangeTo: [ 'hallway' ]},
   'girls room': { canChangeTo: [ 'hallway' ]},
-  'stairs up': { canChangeTo: [ 'hallway', 'living room' ]},
-  'stairs down': { canChangeTo: [ 'living room', 'basement' ]},
-  'basement': { canChangeTo: [ 'stairs down' ]}
+  'basement': { canChangeTo: [ 'living room' ]}
 };
 
 let currentState = "foyer";
