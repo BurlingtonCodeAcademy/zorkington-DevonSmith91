@@ -38,8 +38,8 @@ let itemLookUp = {
 let houseRooms = {
   'foyer': { canChangeTo: [ 'living room', 'outside' ] },
   'living room': { canChangeTo: [ 'foyer', 'kitchen', 'stairs up', 'stairs down' ] },
-  'kitchen': { canChangeTo: [ 'living room' ] },
-  'stairs up'
+  'kitchen': { canChangeTo: [ 'living room' ] }
+  
 };
 
 let currentState = "roomOne";
