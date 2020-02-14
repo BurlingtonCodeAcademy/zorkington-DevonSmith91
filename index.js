@@ -111,8 +111,21 @@ function enterState(newState) {
 }
 
 /*----------------------------------Story--------------------------------------------*/
+intro()
 
-start();
+async function intro() {
+  const introMessage = `Welcome adventurer! stuff stuff stuff, things things things. flush this out at some point. 
+  The controlls for this game will be as follows! `
+  let startPrompt = await ask(introMessage + '\n' +'Do you understand?\n>_')
+  if (startPrompt === 'yes') {
+    start();
+  } else {
+    console.log("Probably best to try a different game then. Good Bye.")
+    process.exit();
+  }
+}
+
+intro()
 
 async function start() {
   const welcomeMessage = `You heard about a haunted house in the next town over. Curiosity got the best of 
