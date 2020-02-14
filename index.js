@@ -44,14 +44,14 @@ class Room {
   }
 }
 
-const outside = new Room('Outside', ' ', [])
+const outside = new Room('Outside', 'Freedom! You can breath a sign of relief as you have escaped the Haunted Brown House', [])
 const foyer = new Room('Foyer', 'You stand in the middle of a small room with peeling, yellowed wallpaper. The front door is to the south. North of you sits a door that leads into what looks like the living room.', [])
 const livingRoom = new Room('Living Room', 'Entering the living room, you see furniture draped in sheets that are covered in dust and mold. The air is thick and stagnant and the little light that shines through the film on the windows casts a brown tint throughout the room. To the east of the room are two sets of stairs, one going up and one going down. To the north of you is a door that leads to the Kitchen. South of you is the door back to the Foyer.', [ 'newspaper' ])
 const kitchen = new Room('Kitchen', 'The kitchen is filthy. The countertop against the wall in front of you is covered in a brown sticky film. Six cabinets sit underneath the countertop but only two have doors, the rest lay bare. Above the countertop sit another four cabinets all with doors intact. A refrigerator sits against the west wall and appears to be running. The oven against the east wall also seems to be in working condition as well. The door to the living room is behind you.', [ 'roast', 'garlic', 'wood steak', 'candy corn'])
 const hallway = new Room('Hallway', 'Once you reach the top of the stairs you turn west and see a small hallway with a filthy window at the end. There are two doors on either side of the hallway, one to the north and the other to the south.', [])
 const mansRoom = new Room("Man's Room", 'Once you enter the master bedroom, you see a huge king-sized bed to the north. On each side sits an end table, each with a lamp. Above the lamps on both sides of the bed are two framed pictures, one of a man in his early 30’s in a black suit that looks dated. The other picture features a woman in her late 20’s in a shimmering gold dress with black trim that seems to match with the era of the other picture. To the east wall sits a long dresser with two columns of four drawers. On top the the dresser sits a pristine, silver jewelry box with pearl trim that appears untouched by time. To the west wall is a large vanity with cracked mirror. The drawers sit open with nothing in them. The door back into the hallway remains open.', [ 'key' ])
 const girlsRoom = new Room("Girl's Room", 'This room has a dingy pale pink wallpaper that is almost peeling off. In the middle of the room is a small metal framed bed and with a stained mattress and small pillow. Against the east wall is a small dresser with three drawers. To the west wall sits rocking horse that is continuously rocking. The way back into the hallway is behind you', [ 'doorknob' ])
-const basement = new Room('Basement', ' *enter description here* The flight of stairs back up to the living room remains illuminated by the light coming in throught the windows.', [])
+const basement = new Room('Basement', 'The dark and dreery basement smells of dirt and mold. The flight of stairs back up to the living room remains illuminated by the light coming in throught the windows. The dingy light shows cobblestone walls and a dirt floor, huddle in the corner is a black figure that looks at you menacingly', [])
 
 mansRoom.locked = true
 outside.locked = true
@@ -66,6 +66,7 @@ let roomLookUp = {
   'girls room': girlsRoom,
   'basement': basement,
 }
+
 
 
 /* ------------------------------Look up Tables----------------------------------*/
@@ -84,6 +85,12 @@ let roomLookUp = {
 //   'tb cure': tbCure
 // }
 
+let movementCommands = ['move', 'Move', 'm', 'M', 'up', 'Up', 'down', 'Down', 'upstairs', 'Upstairs', 'downstairs', 'Downstairs', 'walk', 'Walk']
+
+let actionCommands = ['pick', 'Pick', 'grab', 'Grab', 'eat', 'Eat', 'consume', 'Consume','take', 'Take', 'try', 'Try', 'open', 'Open', 'close', 'Close']
+
+
+//use "steal" command if statement as "cheat code" of sorts
 /*---------------------------------State Changes------------------------------------*/
 
 let houseRooms = {
@@ -97,20 +104,21 @@ let houseRooms = {
   'basement': { canChangeTo: ['living room'] }
 };
 
-let currentState = "foyer";
+let currentState = 'foyer'
 
 function enterState(newState) {
   let validTransitions = houseRooms[currentState].canChangeTo;
   if (validTransitions.includes(newState)) {
-    currentState = newState;
-    console.log('Your current state is: ' + currentState)
-    console.log(currentState)
+    currentState = roomLookUp[newState];
+    console.log('Your current state is: ' + currentState.desc)
   } else {
     return 'Invalid state transition attempted - from ' + currentState + ' to ' + newState;
   }
 }
 
+enterState('foyer')
 enterState('living room')
+enterState('kitchen')
 
 /*----------------------------------Story--------------------------------------------*/
 
