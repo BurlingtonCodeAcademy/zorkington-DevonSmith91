@@ -103,38 +103,36 @@ function enterState(newState) {
   let validTransitions = houseRooms[currentState].canChangeTo;
   if (validTransitions.includes(newState)) {
     currentState = newState;
-    console.log('Your current state is: ' + currentState)
-    console.log(currentState)
+    let stateForTable = roomLookUp[currentState]
+    console.log(stateForTable.desc)
   } else {
-    return 'Invalid state transition attempted - from ' + currentState + ' to ' + newState;
+    console.log('Invalid state transition attempted - from ' + currentState + ' to ' + newState);
   }
 }
 
-enterState('living room')
-
 /*----------------------------------Story--------------------------------------------*/
 
-// start();
+start();
 
-// async function start() {
-//   const welcomeMessage = `You heard about a haunted house in the next town over. Curiosity got the best of 
-//   you so you decided to go check it out on your day off. As you arrive you see a rundown, two story house. 
-//   You notice the windows are covered in filth and no longer allow the light through. The overgrowth of plant 
-//   life indicates that nobody has lived here for years. You approach a creepy red door that’s stained with 
-//   dirt and mold. As you reach for the handle you notice that it appears to be heavily used, even to this day. 
-//   You think nothing of it. As you walk through the door, a chill runs down your spine. Before you realize it 
-//   the door closes behind you with an audible *click*. You start to panic. 
+async function start() {
+  const welcomeMessage = `You heard about a haunted house in the next town over. Curiosity got the best of 
+  you so you decided to go check it out on your day off. As you arrive you see a rundown, two story house. 
+  You notice the windows are covered in filth and no longer allow the light through. The overgrowth of plant 
+  life indicates that nobody has lived here for years. You approach a creepy red door that’s stained with 
+  dirt and mold. As you reach for the handle you notice that it appears to be heavily used, even to this day. 
+  You think nothing of it. As you walk through the door, a chill runs down your spine. Before you realize it 
+  the door closes behind you with an audible *click*. You start to panic. 
 
-//   In front of you appears the ghost of a little girl. Her skin is pale and her dress that was once blue is now 
-//   stained and tattered. Her jet black hair covers her face. As she raises her head slowly you notice her 
-//   lifeless eyes looking at you and you hear her say “I love making new friends. Did you come here to play 
-//   with me? If not you better find a way out fast!” She slowly fades out of sight.
+  In front of you appears the ghost of a little girl. Her skin is pale and her dress that was once blue is now 
+  stained and tattered. Her jet black hair covers her face. As she raises her head slowly you notice her 
+  lifeless eyes looking at you and you hear her say “I love making new friends. Did you come here to play 
+  with me? If not you better find a way out fast!” She slowly fades out of sight.
 
-//   You’re in the front entrance. 
-//   There’s the door you came in behind you and a door into what looks like a living room in front of you. 
-//   What would you like to do?\n>_`;
-//   let answer = await ask(welcomeMessage);
-//   console.log("I'm sorry, I dont know how to " + answer);
-//   process.exit();
-// }
+  You’re in the front entrance. 
+  There’s the door you came in behind you and a door into what looks like a living room in front of you. 
+  What would you like to do?\n>_`;
+  let answer = await ask(welcomeMessage);
+  enterState(answer);
+  // process.exit();
+}
 
