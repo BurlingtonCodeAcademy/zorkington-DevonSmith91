@@ -19,7 +19,7 @@ function cleanWords(word) {
 /*---------------------------------Player----------------------------------------*/
 
 const player = {
-  inventory: ['giant dildo'],
+  inventory: [],
   currentHealth: 13,
   location: null
 }
@@ -211,9 +211,7 @@ async function start() {
           console.log(obj)
         })
       }
-    }
-
-    else if (cleanInput === 'c') {
+    } else if (cleanInput === 'c') {
       if (player.inventory.length === 0) {
         console.log("You don\'t seem to be carrying anything. Would you like to pick something up?")
       } else {
@@ -221,7 +219,7 @@ async function start() {
           console.log(obj)
         })
       }
-    }
+    } else if (.includes()) {}
 
     else if (cleanInput) {
       enterState(cleanInput);
