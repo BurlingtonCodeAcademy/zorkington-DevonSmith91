@@ -9,26 +9,32 @@ function ask(questionText) {
     readlineInterface.question(questionText, resolve);
   });
 }
+/*---------------------------------Functions-------------------------------------*/
+
+function cleanWords(word) {
+  let steralize = word.toString().trim().toLowerCase()
+  return steralize
+}
+
 /*---------------------------------Player----------------------------------------*/
 
 const player = {
   inventory: [],
-  currentHealth: 25
+  currentHealth: 13 
 }
 
 
 function healthLoss() {
   if (player.currentHealth >= 0) {
-      player.currentHealth = player.currentHealth - 1
-      console.log(player.currentHealth)
-      if (player.currentHealth === 12) {
-          console.log("Your starting to feel a bit hungry, Maybe you should get some food")
-      } if (player.currentHealth <= 6 && player.currentHealth > 0) {
-          console.log("Your stomach growls and you start to feel a bit woozey. Food is a necessity")
-      } if (player.currentHealth === 0) {
-          console.log("You have starved to death, you are now one of us. better luck next time.")
-          process.exit()
-      }
+    player.currentHealth = player.currentHealth - 1
+    if (player.currentHealth === 12) {
+      console.log("Your starting to feel a bit hungry, Maybe you should get some food")
+    } if (player.currentHealth <= 6 && player.currentHealth > 0) {
+      console.log("Your stomach growls and you start to feel a bit woozey. Food is a necessity")
+    } if (player.currentHealth === 0) {
+      console.log("You have starved to death, you are now one of us. better luck next time.")
+      process.exit()
+    }
   }
 }
 
@@ -46,11 +52,11 @@ class Room {
 
 const outside = new Room('Outside', 'Freedom! You can breath a sign of relief as you have escaped the Haunted Brown House', [])
 const foyer = new Room('Foyer', 'You stand in the middle of a small room with peeling, yellowed wallpaper. The front door is to the south. North of you sits a door that leads into what looks like the living room.', [])
-const livingRoom = new Room('Living Room', 'Entering the living room, you see furniture draped in sheets that are covered in dust and mold. The air is thick and stagnant and the little light that shines through the film on the windows casts a brown tint throughout the room. To the east of the room are two sets of stairs, one going up and one going down. To the north of you is a door that leads to the Kitchen. South of you is the door back to the Foyer.', [ 'newspaper' ])
-const kitchen = new Room('Kitchen', 'The kitchen is filthy. The countertop against the wall in front of you is covered in a brown sticky film. Six cabinets sit underneath the countertop but only two have doors, the rest lay bare. Above the countertop sit another four cabinets all with doors intact. A refrigerator sits against the west wall and appears to be running. The oven against the east wall also seems to be in working condition as well. The door to the living room is behind you.', [ 'roast', 'garlic', 'wood steak', 'candy corn'])
+const livingRoom = new Room('Living Room', 'Entering the living room, you see furniture draped in sheets that are covered in dust and mold. The air is thick and stagnant and the little light that shines through the film on the windows casts a brown tint throughout the room. To the east of the room are two sets of stairs, one going up and one going down. To the north of you is a door that leads to the Kitchen. South of you is the door back to the Foyer.', ['newspaper'])
+const kitchen = new Room('Kitchen', 'The kitchen is filthy. The countertop against the wall in front of you is covered in a brown sticky film. Six cabinets sit underneath the countertop but only two have doors, the rest lay bare. Above the countertop sit another four cabinets all with doors intact. A refrigerator sits against the west wall and appears to be running. The oven against the east wall also seems to be in working condition as well. The door to the living room is behind you.', ['roast', 'garlic', 'wood steak', 'candy corn'])
 const hallway = new Room('Hallway', 'Once you reach the top of the stairs you turn west and see a small hallway with a filthy window at the end. There are two doors on either side of the hallway, one to the north and the other to the south.', [])
-const mansRoom = new Room("Man's Room", 'Once you enter the master bedroom, you see a huge king-sized bed to the north. On each side sits an end table, each with a lamp. Above the lamps on both sides of the bed are two framed pictures, one of a man in his early 30’s in a black suit that looks dated. The other picture features a woman in her late 20’s in a shimmering gold dress with black trim that seems to match with the era of the other picture. To the east wall sits a long dresser with two columns of four drawers. On top the the dresser sits a pristine, silver jewelry box with pearl trim that appears untouched by time. To the west wall is a large vanity with cracked mirror. The drawers sit open with nothing in them. The door back into the hallway remains open.', [ 'key' ])
-const girlsRoom = new Room("Girl's Room", 'This room has a dingy pale pink wallpaper that is almost peeling off. In the middle of the room is a small metal framed bed and with a stained mattress and small pillow. Against the east wall is a small dresser with three drawers. To the west wall sits rocking horse that is continuously rocking. The way back into the hallway is behind you', [ 'doorknob' ])
+const mansRoom = new Room("Man's Room", 'Once you enter the master bedroom, you see a huge king-sized bed to the north. On each side sits an end table, each with a lamp. Above the lamps on both sides of the bed are two framed pictures, one of a man in his early 30’s in a black suit that looks dated. The other picture features a woman in her late 20’s in a shimmering gold dress with black trim that seems to match with the era of the other picture. To the east wall sits a long dresser with two columns of four drawers. On top the the dresser sits a pristine, silver jewelry box with pearl trim that appears untouched by time. To the west wall is a large vanity with cracked mirror. The drawers sit open with nothing in them. The door back into the hallway remains open.', ['key'])
+const girlsRoom = new Room("Girl's Room", 'This room has a dingy pale pink wallpaper that is almost peeling off. In the middle of the room is a small metal framed bed and with a stained mattress and small pillow. Against the east wall is a small dresser with three drawers. To the west wall sits rocking horse that is continuously rocking. The way back into the hallway is behind you', ['doorknob'])
 const basement = new Room('Basement', 'The dark and dreery basement smells of dirt and mold. The flight of stairs back up to the living room remains illuminated by the light coming in throught the windows. The dingy light shows cobblestone walls and a dirt floor, huddle in the corner is a black figure that looks at you menacingly', [])
 
 mansRoom.locked = true
@@ -71,23 +77,41 @@ let roomLookUp = {
 
 /* ------------------------------Look up Tables----------------------------------*/
 
+class Item {
+  constructor(name, desc, takeable, action) {
+    this.name = name,
+    this.desc = desc, 
+    this.takeable = takeable,
+    this.action = action
+  }
+}
+
+const newspaper = new Item('News Paper', 'An old, deteriorating newspaper', false, () => {console.log('As your fingers start to touch the paper, it instantly turns to dust. You think better of trying to take it.')})
+const key = new Item('Key', 'An old brass key, you think this is important', true, () => {/*need to write a function here that will allow key use*/})
+const doorknob = new Item('Door Knob', 'An ornate doorknob', true, () => {/*need to write a function that will allow doorknob use, same as key use*/})
+const garlic = new Item('Garlic', 'A bulb of garlic that looks strangely fresh', true, () => {/*need to write a function that will allow use of garlic to kill vampire*/})
+const woodSteak = new Item('Wood Steak', 'A wooden steak, it looks like it might have once been a broom handle', true, () => {/*need to write a function that will allow use of steak to kill vampire*/})
+const candyCorn = new Item('Candy Corn', 'A bag of old candy corn, It looks like there\'s one piece left in it', true, () => {/*need to write a function that will allow player to eat and gain a few health*/})
+const roast = new Item('Roast', 'A roast that has been sitting in the oven, it still is hot. Strangely it smells good.', true, () => {/*need to write a function that will allow player to eat and gain all their health back*/})
+const snickersBar = new Item('Snickers Bar', 'A Snickers Bar sitting in an unopened wrapper.', true, () => {/*need to write a function that will allow player to eat and gain a few health back*/})
+const tbCure = new Item('The Cure to Tuberculosis', 'A strange vial that looks like medicen, reading the label you see it\'s a cure for Tuberculosis', true, () => {/*need to figure out what happens if you try to use this*/})
 
 
-// let itemLookUp = {
-//   'newspaper': newspaper,
-//   'key': key,
-//   'doorknob': doorknob,
-//   'garlic': garlic,
-//   'wood steak': woodSteak,
-//   'candy corn': candyCorn,
-//   'roast': roast,
-//   'snickers bar': snickersBar,
-//   'tb cure': tbCure
-// }
+let itemLookUp = {
+  'newspaper': newspaper,
+  'key': key,
+  'doorknob': doorknob,
+  'garlic': garlic,
+  'wood steak': woodSteak,
+  'candy corn': candyCorn,
+  'roast': roast,
+  'snickers bar': snickersBar,
+  'tb cure': tbCure
+}
 
-let movementCommands = ['move', 'Move', 'm', 'M', 'up', 'Up', 'down', 'Down', 'upstairs', 'Upstairs', 'downstairs', 'Downstairs', 'walk', 'Walk']
+let movementCommands = ['move', 'm', 'up', 'down', 'upstairs', 'downstairs', 'walk', 'go']
 
-let actionCommands = ['pick', 'Pick', 'grab', 'Grab', 'eat', 'Eat', 'consume', 'Consume','take', 'Take', 'try', 'Try', 'open', 'Open', 'close', 'Close']
+let actionCommands = ['pick', 'grab', 'eat', 'consume', 'take', 'try', 'open', 'close', 'get']
 
 
 //use "steal" command if statement as "cheat code" of sorts
@@ -108,30 +132,38 @@ let currentState = 'foyer'
 
 function enterState(newState) {
   let validTransitions = houseRooms[currentState].canChangeTo;
-  if (validTransitions.includes(newState)) {
+  if (roomLookUp[newState].locked === true) {
+    console.log('The door before you is locked. You can not pass through a locked door.')
+  }
+  else if (validTransitions.includes(newState)) {
     currentState = newState;
     let stateForTable = roomLookUp[currentState]
     console.log(stateForTable.desc)
-  } else {
+    healthLoss()
+    console.log('Player\'s current health is: ' + player.currentHealth)
+  }
+  else {
     console.log('Invalid state transition attempted - from ' + currentState + ' to ' + newState);
   }
 }
 
-enterState('foyer')
-enterState('living room')
-enterState('kitchen')
 
 /*----------------------------------Story--------------------------------------------*/
+
 intro()
 
 async function intro() {
   const introMessage = `Welcome adventurer! stuff stuff stuff, things things things. flush this out at some point. 
-  The controlls for this game will be as follows! `
-  let startPrompt = await ask(introMessage + '\n' +'Do you understand?\n>_')
-  if (startPrompt === 'yes') {
+  The controlls for this game will be as follows!`
+  
+  let startPrompt = await ask(introMessage + '\n' + 'Do you understand?\n>_')
+  let cleanStart = cleanWords(startPrompt)
+
+  if (cleanStart === 'yes') {
     start();
   } else {
     console.log("Probably best to try a different game then. Good Bye.")
+
     process.exit();
   }
 }
@@ -154,9 +186,22 @@ async function start() {
 
   You’re in the front entrance. 
   There’s the door you came in behind you and a door into what looks like a living room in front of you. 
-  What would you like to do?\n>_`;
-  let answer = await ask(welcomeMessage);
-  enterState(answer);
-  // process.exit();
-}
+  What would you like to do?`;
 
+
+
+  console.log(welcomeMessage);
+  while (player.currentHealth > 0) {
+    let dirtyInput = await ask('>_')
+    let cleanInput = cleanWords(dirtyInput)
+    let cleanArray = cleanInput.split(' ')
+    let command = cleanArray[0]
+    let activity = cleanArray[cleanArray.length -1]
+
+    if (cleanInput) {
+      enterState(cleanInput);
+    } else{
+      console.log("I'm not too sure how to do " + cleanInput + ". Care to try again?")
+    }
+  }
+}
