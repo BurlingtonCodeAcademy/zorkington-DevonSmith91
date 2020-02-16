@@ -19,8 +19,9 @@ function cleanWords(word) {
 /*---------------------------------Player----------------------------------------*/
 
 const player = {
-  inventory: [],
-  currentHealth: 13 
+  inventory: ['giant dildo'],
+  currentHealth: 13,
+  location: null
 }
 
 
@@ -80,21 +81,21 @@ let roomLookUp = {
 class Item {
   constructor(name, desc, takeable, action) {
     this.name = name,
-    this.desc = desc, 
-    this.takeable = takeable,
-    this.action = action
+      this.desc = desc,
+      this.takeable = takeable,
+      this.action = action
   }
 }
 
-const newspaper = new Item('News Paper', 'An old, deteriorating newspaper', false, () => {console.log('As your fingers start to touch the paper, it instantly turns to dust. You think better of trying to take it.')})
-const key = new Item('Key', 'An old brass key, you think this is important', true, () => {/*need to write a function here that will allow key use*/})
-const doorknob = new Item('Door Knob', 'An ornate doorknob', true, () => {/*need to write a function that will allow doorknob use, same as key use*/})
-const garlic = new Item('Garlic', 'A bulb of garlic that looks strangely fresh', true, () => {/*need to write a function that will allow use of garlic to kill vampire*/})
-const woodSteak = new Item('Wood Steak', 'A wooden steak, it looks like it might have once been a broom handle', true, () => {/*need to write a function that will allow use of steak to kill vampire*/})
-const candyCorn = new Item('Candy Corn', 'A bag of old candy corn, It looks like there\'s one piece left in it', true, () => {/*need to write a function that will allow player to eat and gain a few health*/})
-const roast = new Item('Roast', 'A roast that has been sitting in the oven, it still is hot. Strangely it smells good.', true, () => {/*need to write a function that will allow player to eat and gain all their health back*/})
-const snickersBar = new Item('Snickers Bar', 'A Snickers Bar sitting in an unopened wrapper.', true, () => {/*need to write a function that will allow player to eat and gain a few health back*/})
-const tbCure = new Item('The Cure to Tuberculosis', 'A strange vial that looks like medicen, reading the label you see it\'s a cure for Tuberculosis', true, () => {/*need to figure out what happens if you try to use this*/})
+const newspaper = new Item('News Paper', 'An old, deteriorating newspaper', false, () => { console.log('As your fingers start to touch the paper, it instantly turns to dust. You think better of trying to take it.') })
+const key = new Item('Key', 'An old brass key, you think this is important', true, () => {/*need to write a function here that will allow key use*/ })
+const doorknob = new Item('Door Knob', 'An ornate doorknob', true, () => {/*need to write a function that will allow doorknob use, same as key use*/ })
+const garlic = new Item('Garlic', 'A bulb of garlic that looks strangely fresh', true, () => {/*need to write a function that will allow use of garlic to kill vampire*/ })
+const woodSteak = new Item('Wood Steak', 'A wooden steak, it looks like it might have once been a broom handle', true, () => {/*need to write a function that will allow use of steak to kill vampire*/ })
+const candyCorn = new Item('Candy Corn', 'A bag of old candy corn, It looks like there\'s one piece left in it', true, () => {/*need to write a function that will allow player to eat and gain a few health*/ })
+const roast = new Item('Roast', 'A roast that has been sitting in the oven, it still is hot. Strangely it smells good.', true, () => {/*need to write a function that will allow player to eat and gain all their health back*/ })
+const snickersBar = new Item('Snickers Bar', 'A Snickers Bar sitting in an unopened wrapper.', true, () => {/*need to write a function that will allow player to eat and gain a few health back*/ })
+const tbCure = new Item('The Cure to Tuberculosis', 'A strange vial that looks like medicen, reading the label you see it\'s a cure for Tuberculosis', true, () => {/*need to figure out what happens if you try to use this*/ })
 
 
 let itemLookUp = {
@@ -131,6 +132,7 @@ let houseRooms = {
 
 let currentState = 'foyer'
 
+
 function enterState(newState) {
   let validTransitions = houseRooms[currentState].canChangeTo;
   if (roomLookUp[newState].locked === true) {
@@ -142,6 +144,7 @@ function enterState(newState) {
     console.log(stateForTable.desc)
     healthLoss()
     console.log('Player\'s current health is: ' + player.currentHealth)
+    player.location = roomLookUp[currentState]
   }
   else {
     console.log('Invalid state transition attempted - from ' + currentState + ' to ' + newState);
@@ -156,7 +159,7 @@ intro()
 async function intro() {
   const introMessage = `Welcome adventurer! stuff stuff stuff, things things things. flush this out at some point. 
   The controlls for this game will be as follows!`
-  
+
   let startPrompt = await ask(introMessage + '\n' + 'Do you understand?\n>_')
   let cleanStart = cleanWords(startPrompt)
 
@@ -192,16 +195,40 @@ async function start() {
 
 
   console.log(welcomeMessage);
+  player.location = foyer
   while (player.currentHealth > 0) {
     let dirtyInput = await ask('>_')
     let cleanInput = cleanWords(dirtyInput)
     let cleanArray = cleanInput.split(' ')
     let command = cleanArray[0]
-    let activity = cleanArray[cleanArray.length -1]
+    let activity = cleanArray[cleanArray.length - 1]
 
-    if (cleanInput) {
+    if (cleanInput === 'i') {
+      if (player.location.inv.length === 0) {
+        console.log("There is nothing here...")
+      } else {
+        player.location.inv.forEach(function (obj) {
+          console.log(obj)
+        })
+      }
+    }
+
+    else if (cleanInput === 'c') {
+      if (player.inventory.length === 0) {
+        console.log("You don\'t seem to be carrying anything. Would you like to pick something up?")
+      } else {
+        player.inventory.forEach(function (obj) {
+          console.log(obj)
+        })
+      }
+    }
+
+    else if (cleanInput) {
       enterState(cleanInput);
-    } else{
+    }
+    
+
+    else {
       console.log("I'm not too sure how to do " + cleanInput + ". Care to try again?")
     }
   }
