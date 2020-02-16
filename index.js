@@ -115,6 +115,7 @@ let actionCommands = ['pick', 'grab', 'eat', 'consume', 'take', 'try', 'open', '
 
 
 //use "steal" command if statement as "cheat code" of sorts
+
 /*---------------------------------State Changes------------------------------------*/
 
 let houseRooms = {
@@ -205,3 +206,6 @@ async function start() {
     }
   }
 }
+
+//a good place to start is to just launch the game and look at what it is that we want to do. we want to move? gotta write a move function
+//if we want to interact with something? we need to write that function, we want to eat something? we need to write it. and go step by step until all of the actions are covered in terms of what we want people to be able to do.
