@@ -18,23 +18,32 @@ function cleanWords(dirtyWord) {
 
 // function for health gain while eating food
 function healthGain(food) {
+  // if statement for eating a roast
   if (player.inventory.includes(food) && food === 'roast') {
     player.inventory.splice(player.inventory.indexOf(food), 1)
     player.currentHealth = 7
     console.log("You restored all your health")
-  } else if (player.inventory.includes(food) && food === 'snickers') {
+  } 
+  // if statement for eating a snickers
+  else if (player.inventory.includes(food) && food === 'snickers') {
     player.inventory.splice(player.inventory.indexOf(food), 1)
     player.currentHealth = player.currentHealth + 4
     console.log("You gained 5 points of health, but time is still running out!")
-  } else if (player.inventory.includes(food) && food === 'garlic') {
+  } 
+  //if statement for eating garlic
+  else if (player.inventory.includes(food) && food === 'garlic') {
     player.inventory.splice(player.inventory.indexOf(food), 1)
     player.currentHealth = player.currentHealth + 1
     console.log("You have gained 1 point of health, but at what cost?")
-  } else if (player.inventory.includes(food) && food === 'candycorn') {
+  } 
+  //if statement for eating candycorn
+  else if (player.inventory.includes(food) && food === 'candycorn') {
     player.inventory.splice(player.inventory.indexOf(food), 1)
     player.currentHealth = player.currentHealth + 1
     console.log("You pop in some of the original candycorn, circa 1922. Although your integrity is questioned, you gain 1 point of health")
-  } else {
+  } 
+  //console log for something other then these foods
+  else {
     console.log("You cant eat that!")
   }
 }
@@ -42,13 +51,18 @@ function healthGain(food) {
 // function to pick up objects
 function takeStuff(thingIWant) { 
   let canITakeIt = itemLookUp[thingIWant]
+  //seeing if the object even exists in the game
   if (!canITakeIt) {
     console.log('I\'m not sure that exists here. Want to try something else?')
-  } else if (canITakeIt.takeable === true && player.location.inv.includes(thingIWant)) {
+  } 
+  //if the object does exist and it can be taken.
+  else if (canITakeIt.takeable === true && player.location.inv.includes(thingIWant)) {
     player.location.inv.splice(player.location.inv.indexOf(thingIWant), 1)
     player.inventory.push(thingIWant)
     console.log("You have now picked up " + thingIWant)
-  } else {
+  } 
+  //if the object cant be taken
+  else {
     console.log("This is not yours to take!")
   }
 }
@@ -79,11 +93,16 @@ function examine(thingToSee) {
 function healthLoss() {
   if (player.currentHealth >= 0) {
     player.currentHealth = player.currentHealth - 1
+    //when player health hits 5, send a message saying you need food
     if (player.currentHealth === 5) {
       console.log("Your starting to feel a bit hungry, Maybe you should get some food")
-    } if (player.currentHealth <= 3 && player.currentHealth > 0) {
+    } 
+    // when the player health hits 3, it constantly reminds the player it needs food
+    if (player.currentHealth <= 3 && player.currentHealth > 0) {
       console.log("Your stomach growls and you start to feel a bit woozey. Food is a necessity")
-    } if (player.currentHealth === 0) {
+    } 
+    // player ded
+    if (player.currentHealth === 0) {
       console.log("You have starved to death, you are now one of us. better luck next time.")
       process.exit()
     }
@@ -93,26 +112,39 @@ function healthLoss() {
 //function for moving from room to room and to encorporate health loss per room as well as using a key to unlock doors
 function enterState(newState) {
   let validTransitions = houseRooms[currentState].canChangeTo;
+  // looking to see if the new room is a valid place to move and if it is locked.
   if (validTransitions.includes(newState) && roomLookUp[newState].locked === true) {
+    // if it is locked, and they have a key, they can pass through the door
     if (player.inventory.includes('key')) {
       outside.locked = false
       currentState = newState;
       let stateForTable = roomLookUp[currentState]
+      //description for the rooms
       console.log(stateForTable.desc)
+      //player health loss for each room moved
       healthLoss()
       console.log('Player\'s current health is: ' + player.currentHealth)
-    } else {
+    } 
+    //if player doesnt have a key, they cant pass through a locked door
+    else {
       console.log('The door before you is locked. Maybe you should find a key.')
     }
-  } else if (validTransitions.includes(newState) && roomLookUp[newState].locked === false) {
+  } 
+  //if the room exists and the door is not locked
+  else if (validTransitions.includes(newState) && roomLookUp[newState].locked === false) {
     currentState = newState;
     let stateForTable = roomLookUp[currentState]
+    //console log the room descriptions
     console.log(stateForTable.desc)
+    //player health loss for each room they move
     healthLoss()
     console.log('Player\'s current health is: ' + player.currentHealth)
-  } else {
+  } 
+  //if the room change is invalid
+  else {
     console.log('That doesn\'t seem to be a place I know about. Care to try again?')
   }
+  //change player location
   player.location = roomLookUp[currentState]
 }
 
@@ -144,7 +176,7 @@ const foyer = new Room('Foyer', 'You stand in the middle of a small room with pe
 
 const lounge = new Room('Lounge', 'Entering the lounge, you see furniture draped in sheets that are covered in dust and mold. The air is thick and stagnant and the little light that shines through the film on the windows casts a brown tint throughout the room. There is a dusty table in front of the couch and on it sits an old newspaper, yellowed by time. On one side of the room is a flight of stairs going down. The opposite side has a hallway. To the far side of the room is a door that leads to the Kitchen. Behind you is the door back to the Foyer. ', ['newspaper'])
 
-const kitchen = new Room('Kitchen', 'The kitchen is filthy. The countertop against the wall in front of you is covered in a brown sticky film. Six cabinets sit underneath the countertop but only two have doors, the rest lay bare. Above the countertop sit another four cabinets all with doors intact. A refrigerator sits against one wall and appears to be running. The oven against the opposite wall also seems to be in working as well. The smell of dinner fills the air. You seem put off by it but also quite curious. The door to the lounge is behind you.', ['roast', 'garlic', 'wood steak', 'candycorn'])
+const kitchen = new Room('Kitchen', 'The kitchen is filthy. The countertop against the wall in front of you is covered in a brown sticky film. Six cabinets sit underneath the countertop but only two have doors, the rest lay bare. Above the countertop sit another four cabinets all with doors intact. A refrigerator sits against one wall and appears to be running. The oven against the opposite wall also seems to be in working as well. The smell of dinner fills the air. You seem put off by it but also quite curious. The door to the lounge is behind you.', ['roast', 'garlic', 'stake', 'candycorn'])
 
 const hallway = new Room('Hallway', 'Once you reach the top of the stairs you turn west and see a small hallway with a filthy window at the end. There are two doors on either side of the hallway, one looks like the Master Bedchamber and the other looks to be a little girl\s bedroom.', [])
 
@@ -177,7 +209,7 @@ const doorknob = new Item('Door Knob', 'An ornate doorknob', true)
 
 const garlic = new Item('Garlic', 'A bulb of garlic that looks strangely fresh', true)
 
-const woodSteak = new Item('Wood Steak', 'A wooden steak, it looks like it might have once been a broom handle', true)
+const stake = new Item('stake', 'A wooden stake, it looks like it might have once been a broom handle', true)
 
 const candyCorn = new Item('CandyCorn', 'A bag of old candycorn, It looks like there\'s one piece left in it', true)
 
@@ -207,7 +239,7 @@ let itemLookUp = {
   'key': key,
   'doorknob': doorknob,
   'garlic': garlic,
-  'wood steak': woodSteak,
+  'stake': stake,
   'candycorn': candyCorn,
   'roast': roast,
   'snickers': snickersBar,
