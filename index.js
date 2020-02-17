@@ -320,8 +320,10 @@ async function start() {
     //allow user to look at player inventory
     else if (cleanInput === 'c') {
       if (player.inventory.length === 0) {
+        console.log('Your current health is: ' + player.currentHealth)
         console.log("You don\'t seem to be carrying anything. Would you like to pick something up?")
       } else {
+        console.log('Your current health is: ' + player.currentHealth)
         player.inventory.forEach(function (obj) {
           console.log(obj)
         })
