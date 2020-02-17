@@ -10,44 +10,50 @@ function ask(questionText) {
 
 /*---------------------------------Functions-------------------------------------*/
 
+// function to steralize words
 function cleanWords(dirtyWord) {
   let steralize = dirtyWord.toString().trim().toLowerCase()
   return steralize
 }
 
+// function for health gain while eating food
 function healthGain(food) {
   if (player.inventory.includes(food) && food === 'roast') {
     player.inventory.splice(player.inventory.indexOf(food), 1)
-    currentHealth = 10
+    player.currentHealth = 7
     console.log("You restored all your health")
   } else if (player.inventory.includes(food) && food === 'snickers') {
     player.inventory.splice(player.inventory.indexOf(food), 1)
-    currentHealth = currentHealth + 4
+    player.currentHealth = player.currentHealth + 4
     console.log("You gained 5 points of health, but time is still running out!")
   } else if (player.inventory.includes(food) && food === 'garlic') {
     player.inventory.splice(player.inventory.indexOf(food), 1)
-    currentHealth = currentHealth + 1
+    player.currentHealth = player.currentHealth + 1
     console.log("You have gained 1 point of health, but at what cost?")
   } else if (player.inventory.includes(food) && food === 'candycorn') {
     player.inventory.splice(player.inventory.indexOf(food), 1)
-    currentHealth = currentHealth + 1
+    player.currentHealth = player.currentHealth + 1
     console.log("You pop in some of the original candycorn, circa 1922. Although your integrity is questioned, you gain 1 point of health")
   } else {
     console.log("You cant eat that!")
   }
 }
 
-function takeStuff(thingIWant) { //known bug. take *item that doesnt exist* throws an error and it's due to the takable property
+// function to pick up objects
+function takeStuff(thingIWant) { 
   let canITakeIt = itemLookUp[thingIWant]
-  if (canITakeIt.takeable === true && player.location.inv.includes(thingIWant)) {
+  if (!canITakeIt) {
+    console.log('I\'m not sure that exists here. Want to try something else?')
+  } else if (canITakeIt.takeable === true && player.location.inv.includes(thingIWant)) {
     player.location.inv.splice(player.location.inv.indexOf(thingIWant), 1)
     player.inventory.push(thingIWant)
     console.log("You have now picked up " + thingIWant)
   } else {
-    console.log("This is not your to take!")
+    console.log("This is not yours to take!")
   }
 }
 
+//function to put objects down
 function dropStuff(trash) {
   if (player.inventory.includes(trash)) {
     player.inventory.splice(player.inventory.indexOf(trash), 1)
@@ -59,6 +65,7 @@ function dropStuff(trash) {
   }
 }
 
+//function to look at things
 function examine(thingToSee) {
   let lookAt = itemLookUp[thingToSee]
   if (player.location.inv.includes(thingToSee)) {
@@ -68,6 +75,7 @@ function examine(thingToSee) {
   }
 }
 
+//function for health loss
 function healthLoss() {
   if (player.currentHealth >= 0) {
     player.currentHealth = player.currentHealth - 1
@@ -82,6 +90,7 @@ function healthLoss() {
   }
 }
 
+//function for moving from room to room and to encorporate health loss per room as well as using a key to unlock doors
 function enterState(newState) {
   let validTransitions = houseRooms[currentState].canChangeTo;
   if (validTransitions.includes(newState) && roomLookUp[newState].locked === true) {
@@ -109,14 +118,16 @@ function enterState(newState) {
 
 /*---------------------------------Player----------------------------------------*/
 
+//the player object
 const player = {
   inventory: [],
-  currentHealth: 10,
+  currentHealth: 7,
   location: null
 }
 
 /*---------------------------------Rooms-----------------------------------------*/
 
+//class for creating all of the rooms
 class Room {
   constructor(name, desc, inv) {
     this.name = name
@@ -126,11 +137,12 @@ class Room {
   }
 }
 
+//room definitions
 const outside = new Room('Outside', 'Freedom! You can breath a sign of relief as you have escaped the Haunted Brown House.\nCongratulations on Successfully completing the game! Feel good about yourself, but not too good. It was an easy game.', [])
 
 const foyer = new Room('Foyer', 'You stand in the middle of a small room with peeling, yellowed wallpaper. The front door is to one side and to the other, sits a door that leads into what looks like the lounge.', [])
 
-const lounge = new Room('Lounge', 'Entering the lounge, you see furniture draped in sheets that are covered in dust and mold. The air is thick and stagnant and the little light that shines through the film on the windows casts a brown tint throughout the room. There is a dusty table in front of the couch and on it sits an old newspaper, yellowed by time. To the east of the room are two sets of stairs, one going up and one going down. To the far side of the room is a door that leads to the Kitchen. Behind you is the door back to the Foyer. ', ['newspaper'])
+const lounge = new Room('Lounge', 'Entering the lounge, you see furniture draped in sheets that are covered in dust and mold. The air is thick and stagnant and the little light that shines through the film on the windows casts a brown tint throughout the room. There is a dusty table in front of the couch and on it sits an old newspaper, yellowed by time. On one side of the room is a flight of stairs going down. The opposite side has a hallway. To the far side of the room is a door that leads to the Kitchen. Behind you is the door back to the Foyer. ', ['newspaper'])
 
 const kitchen = new Room('Kitchen', 'The kitchen is filthy. The countertop against the wall in front of you is covered in a brown sticky film. Six cabinets sit underneath the countertop but only two have doors, the rest lay bare. Above the countertop sit another four cabinets all with doors intact. A refrigerator sits against one wall and appears to be running. The oven against the opposite wall also seems to be in working as well. The smell of dinner fills the air. You seem put off by it but also quite curious. The door to the lounge is behind you.', ['roast', 'garlic', 'wood steak', 'candycorn'])
 
@@ -147,6 +159,7 @@ outside.locked = true
 
 /* ----------------------------------Items-------------------------------------------*/
 
+//class for creating items
 class Item {
   constructor(name, desc, takeable) {
       this.name = name,
@@ -155,7 +168,7 @@ class Item {
   }
 }
 
-
+//item descriptions
 const newspaper = new Item('News Paper', 'An old, deteriorating newspaper is sitting on the table. As you peer over it you can see the date, it\'s from 1890, You are able to read the headline. It says: "Mercy Brown and Family found dead! Neighbors believe it to be the work of the undead!" You chuckle at the thought of people believing things like this.', false)
 
 const key = new Item('Key', 'An old brass key, you think this is important', true)
@@ -176,6 +189,7 @@ const tbCure = new Item('The Cure to Tuberculosis', 'A strange vial that looks l
 
 /* ------------------------------Look up Tables----------------------------------*/
 
+//look up table for rooms
 let roomLookUp = {
   'outside': outside,
   'foyer': foyer,
@@ -187,6 +201,7 @@ let roomLookUp = {
   'basement': basement,
 }
 
+//look up table for items
 let itemLookUp = {
   'newspaper': newspaper,
   'key': key,
@@ -199,6 +214,7 @@ let itemLookUp = {
   'tb cure': tbCure
 }
 
+//look up table for actions
 const actions = {
   move: ['move', 'go', 'walk', 'run',],
   consume: ['eat', 'consume'],
@@ -209,6 +225,7 @@ const actions = {
 
 /*---------------------------------State Changes------------------------------------*/
 
+//table for what rooms connect to eachother
 let houseRooms = {
   'outside': { canChangeTo: ['foyer'] },
   'foyer': { canChangeTo: ['lounge', 'outside'] },
@@ -220,43 +237,45 @@ let houseRooms = {
   'basement': { canChangeTo: ['lounge'] }
 };
 
+//starting room for player
 let currentState = 'foyer'
 
 /*----------------------------------Story--------------------------------------------*/
 
+//intro prompt for if you want to play the game.
 async function intro() {
 
   const introMessage = `Welcome Risk Seeker! You are about to embark on a scary adventure! Please word your actions in a [Action] followed by [Item/Room] format. If you would like to look at your inventory you can do this by typing [C] at any time. You can also check on a rooms inventory by typing the letter [I] at any time. Please refer to rooms by their name, and cheaters will be punished to the full extent of my abilities.`
 
-  let startPrompt = await ask(introMessage + '\n' + 'Do you understand?\n>_')
+  let startPrompt = await ask(introMessage + '\n' + 'Do you understand? Yes or No \n>_')
   let cleanStart = cleanWords(startPrompt)
   if (cleanStart === 'yes') {
     start();
-  } else {
+  } else { // you really shouldnt be saying no here but that's youre choice.
     console.log("Probably best to try a different game then. Good Bye.")
     process.exit();
   }
 }
 
 intro()
-
+// start of the actual game.
 async function start() {
   const welcomeMessage = `You heard about a haunted house in the next town over. Curiosity got the best of you so you decided to go check it out on your day off. As you arrive you see a rundown, two story house. You notice the windows are covered in filth and no longer allow the light through. The overgrowth of plant life indicates that nobody has lived here for years. You approach a creepy red door that's stained with dirt and mold. As you reach for the handle you notice that it appears to be heavily used, even to this day. You think nothing of it. As you walk through the door, a chill runs down your spine. Before you realize it the door has closed behind you with an audible *click*. You start to panic. In front of you appears the ghost of a little girl. Her skin is pale and her dress that was once blue is now stained and tattered. Her jet black hair covers her face. As she raises her head slowly you notice her lifeless eyes looking at you and you hear her say "I love making new friends. Did you come here to play with me? If not you better find a way out fast!" She slowly fades out of sight. You're in the front entrance. There's the door you came in behind you and a door into what looks like a lounge in front of you. 
   
   What would you like to do?`;
 
   console.log(welcomeMessage);
-
+  // setting player into the start of the game and setting location to foyer
   player.location = foyer
-  
+  //a loop to constantly let player have a prompt to input information
   while (player.currentHealth > 0 && player.location !== outside) {
-    
+    // user input, sanitizaiton, and splitting things into arrays and variables linked to each stage
     let dirtyInput = await ask('>_')
     let cleanInput = cleanWords(dirtyInput)
     let cleanArray = cleanInput.split(' ')
     let command = cleanArray[0]
     let activity = cleanArray[cleanArray.length - 1]
-    
+    // allow user to look at inventory
     if (cleanInput === 'i') {
       if (player.location.inv.length === 0) {
         console.log("There is nothing here...")
@@ -265,7 +284,9 @@ async function start() {
           console.log(obj)
         })
       }
-    } else if (cleanInput === 'c') {
+    } 
+    //allow user to look at player inventory
+    else if (cleanInput === 'c') {
       if (player.inventory.length === 0) {
         console.log("You don\'t seem to be carrying anything. Would you like to pick something up?")
       } else {
@@ -273,10 +294,14 @@ async function start() {
           console.log(obj)
         })
       }
-    } else if (cleanInput === 'xyzzy') {
+    } 
+    //cheat codes that backfire because cheaters look for the easy way out. 
+    else if (cleanInput === 'xyzzy') {
       console.log('Cheaters never prosper.')
       process.exit();
-    } else if (actions.move.includes(command)) {
+    } 
+    //if statements using every action you can do
+    else if (actions.move.includes(command)) {
       enterState(activity)
     } else if (actions.grab.includes(command)) {
       takeStuff(activity)
@@ -286,13 +311,12 @@ async function start() {
       healthGain(activity)
     } else if (actions.examine.includes(command)) {
       examine(activity)
-    }else {
+    }
+    //safety clause in case input doesnt match commands
+    else {
       console.log("I'm not too sure how to do " + cleanInput + ". Care to try again?")
     }
   }
   process.exit()
 }
 
-
-//a good place to start is to just launch the game and look at what it is that we want to do. we want to move? gotta write a move function
-//if we want to interact with something? we need to write that function, we want to eat something? we need to write it. and go step by step until all of the actions are covered in terms of what we want people to be able to do.
