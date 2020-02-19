@@ -1,3 +1,8 @@
+/** Overall, really great game! Excellent use of comments to let any programmer know what is happening in your code. Great organization as well. I like
+ *  the storyline that you made up and all of the extra rooms that you added. One thing that happened when plaing your game, is I got to the foyer with
+ *  the key with one health point left, so when I went outside, I won, but I also died. Kind of a bittersweet end! Is this a feature you meant to implement?
+ *  Or is this an accidental case that I found? Maybe check it out if that's not supposed to happen. Other than that, you both seem to have a good
+ *  understanding of the lessons discussed in week 2. I don't have a ton of comments for your code. Great creativity and really nice code! Good Job.**/
 /* --------------------------------Readline------------------------------------*/
 
 const readline = require('readline');
@@ -9,7 +14,7 @@ function ask(questionText) {
 }
 
 /*---------------------------------Functions-------------------------------------*/
-
+/** Nice use of a helper function to sanitize the user's input **/
 // function to steralize words
 function cleanWords(dirtyWord) {
   let steralize = dirtyWord.toString().trim().toLowerCase()
@@ -23,25 +28,25 @@ function healthGain(food) {
     player.inventory.splice(player.inventory.indexOf(food), 1)
     player.currentHealth = 7
     console.log("You restored all your health")
-  } 
+  }
   // if statement for eating a snickers
   else if (player.inventory.includes(food) && food === 'snickers') {
     player.inventory.splice(player.inventory.indexOf(food), 1)
     player.currentHealth = player.currentHealth + 4
     console.log("You gained 5 points of health, but time is still running out!")
-  } 
+  }
   //if statement for eating garlic
   else if (player.inventory.includes(food) && food === 'garlic') {
     player.inventory.splice(player.inventory.indexOf(food), 1)
     player.currentHealth = player.currentHealth + 1
     console.log("You have gained 1 point of health, but at what cost?")
-  } 
+  }
   //if statement for eating candycorn
   else if (player.inventory.includes(food) && food === 'candycorn') {
     player.inventory.splice(player.inventory.indexOf(food), 1)
     player.currentHealth = player.currentHealth + 1
     console.log("You pop in some of the original candycorn, circa 1922. Although your integrity is questioned, you gain 1 point of health")
-  } 
+  }
   //console log for something other then these foods
   else {
     console.log("You cant eat that!")
@@ -49,18 +54,18 @@ function healthGain(food) {
 }
 
 // function to pick up objects
-function takeStuff(thingIWant) { 
+function takeStuff(thingIWant) {
   let canITakeIt = itemLookUp[thingIWant]
   //seeing if the object even exists in the game
   if (!canITakeIt) {
     console.log('I\'m not sure that exists here. Want to try something else?')
-  } 
+  }
   //if the object does exist and it can be taken.
   else if (canITakeIt.takeable === true && player.location.inv.includes(thingIWant)) {
     player.location.inv.splice(player.location.inv.indexOf(thingIWant), 1)
     player.inventory.push(thingIWant)
     console.log("You have now picked up " + thingIWant)
-  } 
+  }
   //if the object cant be taken
   else {
     console.log("This is not yours to take!")
@@ -80,6 +85,7 @@ function dropStuff(trash) {
 }
 
 //function to look at things
+/** Great use of decriptive parameter names **/
 function examine(thingToSee) {
   let lookAt = itemLookUp[thingToSee]
   if (player.location.inv.includes(thingToSee)) {
@@ -90,17 +96,18 @@ function examine(thingToSee) {
 }
 
 //function for health loss
+/** Cool use of a player health system **/
 function healthLoss() {
   if (player.currentHealth >= 0) {
     player.currentHealth = player.currentHealth - 1
     //when player health hits 5, send a message saying you need food
     if (player.currentHealth === 5) {
       console.log("Your starting to feel a bit hungry, Maybe you should get some food")
-    } 
+    }
     // when the player health hits 3, it constantly reminds the player it needs food
     if (player.currentHealth <= 3 && player.currentHealth > 0) {
       console.log("Your stomach growls and you start to feel a bit woozey. Food is a necessity")
-    } 
+    }
     // player ded
     if (player.currentHealth === 0) {
       console.log("You have starved to death, you are now one of us. better luck next time.")
@@ -124,12 +131,12 @@ function enterState(newState) {
       //player health loss for each room moved
       healthLoss()
       console.log('Player\'s current health is: ' + player.currentHealth)
-    } 
+    }
     //if player doesnt have a key, they cant pass through a locked door
     else {
       console.log('The door before you is locked. Maybe you should find a key.')
     }
-  } 
+  }
   //if the room exists and the door is not locked
   else if (validTransitions.includes(newState) && roomLookUp[newState].locked === false) {
     currentState = newState;
@@ -139,7 +146,7 @@ function enterState(newState) {
     //player health loss for each room they move
     healthLoss()
     console.log('Player\'s current health is: ' + player.currentHealth)
-  } 
+  }
   //if the room change is invalid
   else {
     console.log('That doesn\'t seem to be a place I know about. Care to try again?')
@@ -186,6 +193,7 @@ const bedroom = new Room("Bedroom", 'This room has a dingy pale pink wallpaper t
 
 const basement = new Room('Basement', 'The dark and dreery basement smells of dirt and mold. The flight of stairs back up to the lounge remains illuminated by the light coming in throught the windows. The dingy light shows cobblestone walls and a dirt floor, huddled in the corner is a black figure that looks at you menacingly. Maybe you should leave', [])
 
+/** You could put this in the Room constructor for outside and leave the rest blank to keep them at false **/
 outside.locked = true
 
 
@@ -250,7 +258,7 @@ let itemLookUp = {
 const actions = {
   move: ['move', 'go', 'walk', 'run', 'enter'],
   consume: ['eat', 'consume'],
-  grab: ['grab', 'take',],
+  grab: ['grab', 'take',],  /** maybe add 'pickup' to this list?**/
   examine: ['examine', 'read'],
   drop: ['drop', 'throw', 'leave']
 }
@@ -273,7 +281,7 @@ let houseRooms = {
 let currentState = 'foyer'
 
 /*----------------------------------Story--------------------------------------------*/
-
+/** Good use of comments to section out your code and keep it organized **/
 //intro prompt for if you want to play the game.
 async function intro() {
 
@@ -292,8 +300,8 @@ async function intro() {
 intro()
 // start of the actual game.
 async function start() {
-  const welcomeMessage = `You heard about a haunted house in the next town over. Curiosity got the best of you so you decided to go check it out on your day off. As you arrive you see a rundown, two story house. You notice the windows are covered in filth and no longer allow the light through. The overgrowth of plant life indicates that nobody has lived here for years. You approach a creepy red door that's stained with dirt and mold. As you reach for the handle you notice that it appears to be heavily used, even to this day. You think nothing of it. As you walk through the door, a chill runs down your spine. Before you realize it the door has closed behind you with an audible *click*. You start to panic. In front of you appears the ghost of a little girl. Her skin is pale and her dress that was once blue is now stained and tattered. Her jet black hair covers her face. As she raises her head slowly you notice her lifeless eyes looking at you and you hear her say "I love making new friends. Did you come here to play with me? If not you better find a way out fast!" She slowly fades out of sight. You're in the front entrance. There's the door to go back outside behind you and a door into what looks like a lounge in front of you. 
-  
+  const welcomeMessage = `You heard about a haunted house in the next town over. Curiosity got the best of you so you decided to go check it out on your day off. As you arrive you see a rundown, two story house. You notice the windows are covered in filth and no longer allow the light through. The overgrowth of plant life indicates that nobody has lived here for years. You approach a creepy red door that's stained with dirt and mold. As you reach for the handle you notice that it appears to be heavily used, even to this day. You think nothing of it. As you walk through the door, a chill runs down your spine. Before you realize it the door has closed behind you with an audible *click*. You start to panic. In front of you appears the ghost of a little girl. Her skin is pale and her dress that was once blue is now stained and tattered. Her jet black hair covers her face. As she raises her head slowly you notice her lifeless eyes looking at you and you hear her say "I love making new friends. Did you come here to play with me? If not you better find a way out fast!" She slowly fades out of sight. You're in the front entrance. There's the door to go back outside behind you and a door into what looks like a lounge in front of you.
+
   What would you like to do?`;
 
   console.log(welcomeMessage);
@@ -316,7 +324,7 @@ async function start() {
           console.log(obj)
         })
       }
-    } 
+    }
     //allow user to look at player inventory
     else if (cleanInput === 'c') {
       if (player.inventory.length === 0) {
@@ -328,12 +336,12 @@ async function start() {
           console.log(obj)
         })
       }
-    } 
-    //cheat codes that backfire because cheaters look for the easy way out. 
+    }
+    //cheat codes that backfire because cheaters look for the easy way out.
     else if (cleanInput === 'xyzzy') {
       console.log('Cheaters never prosper.')
       process.exit();
-    } 
+    }
     //if statements using every action you can do
     else if (actions.move.includes(command)) {
       enterState(activity)
